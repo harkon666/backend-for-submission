@@ -19,10 +19,11 @@ async function bootstrap() {
   SwaggerModule.setup('documentation', app, documentFactory);
 
   const port = process.env.PORT ?? 3001;
-  await app.listen(port);
+  // Bind to 0.0.0.0 for Fly.io deployment (required for external access)
+  await app.listen(port, '0.0.0.0');
 
-  console.log(`🚀 Backend running on http://localhost:${port}`);
-  console.log(`📚 Swagger docs at http://localhost:${port}/documentation`);
+  console.log(`🚀 Backend running on port ${port}`);
+  console.log(`📚 Swagger docs at /documentation`);
 }
 
 bootstrap().catch((error) => {
