@@ -1,15 +1,19 @@
-# fly.toml app configuration file generated for backend-for-submission-nur-cg on 2026-01-17T07:46:01Z
+# fly.toml app configuration file generated for backend-for-submission on 2026-01-17
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
 app = 'backend-for-submission-nur-cg'
-primary_region = 'ams'
+primary_region = 'sin'
 
 [build]
 
+[env]
+  PORT = "3001"
+  NODE_ENV = "production"
+
 [http_service]
-  internal_port = 8080
+  internal_port = 3001
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
@@ -17,7 +21,6 @@ primary_region = 'ams'
   processes = ['app']
 
 [[vm]]
-  memory = '1gb'
+  memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
-  memory_mb = 256

@@ -3,28 +3,35 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Install pnpm
+RUN npm install -g pnpm
+
 # Copy package files
-COPY package*.json ./
-COPY backend/package*.json ./backend/
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN npm ci --workspace=backend
+RUN pnpm install --frozen-lockfile
 
 # Copy source code
-COPY backend ./backend
+COPY . .
 
 # Build the application
-RUN npm run build:backend
+RUN pnpm run build
 
 # Production stage
 FROM node:20-alpine AS production
 
 WORKDIR /app
 
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy package files and install production dependencies only
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --prod --frozen-lockfile
+
 # Copy built application
-COPY --from=builder /app/backend/dist ./dist
-COPY --from=builder /app/backend/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
 
 # Expose port
 EXPOSE 3001
